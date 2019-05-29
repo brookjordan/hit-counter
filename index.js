@@ -120,9 +120,14 @@ function saveDataToJSON(updatedData) {
 }
 
 function handleServerRequest(request, response) {
-  addIP(request.connection.remoteAddress, request.headers.host, request.url);
-  saveDataToJSON(savedData);
-  response.write(JSON.stringify(savedData, null, 2));
+  if (request.url === '/favicon.ico') {
+    response.write('');
+  } else {
+    addIP(request.connection.remoteAddress, request.headers.host, request.url);
+    saveDataToJSON(savedData);
+    response.write(JSON.stringify(savedData, null, 2));
+  }
+
   response.end();
 }
 
