@@ -131,5 +131,8 @@ function handleServerRequest(request, response) {
   savedData = JSON.parse(savedDataJSON);
 
   let server = http.createServer(handleServerRequest);
-  server.listen(PORT, handleServerStarted);
+  server.listen(
+    process.env.PORT || 5000,
+    handleServerStarted
+  );
 }());
