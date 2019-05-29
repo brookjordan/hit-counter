@@ -22,7 +22,7 @@
 }
 
  *
- * Initial shape:
+ * Initial value:
  *
 
 {
@@ -49,13 +49,6 @@ function handleServerStarted() {
   console.log(`Listening to :${PORT}`);
 }
 
-function handleServerRequest(request, response) {
-  addIP(request.connection.remoteAddress, request.headers.host, request.url);
-  saveDataToJSON(savedData);
-  response.write(JSON.stringify(savedData, null, 2));
-  response.end();
-}
-
 function readSavedDataJSON() {
   return readFile(
     path.join(__dirname, 'hits.json'),
@@ -63,29 +56,38 @@ function readSavedDataJSON() {
   );
 }
 
-function addIP(IP, host, url) {
+function addIP(IP, _host, _url) {
   savedData.hitCount += 1;
   savedData.uniqueIPs = Array.from(new Set(savedData.uniqueIPs).add(IP));
 
-  if (!savedData.hosts[host]) {
-    savedData.hosts[host] = {
+  let fullURLString = `${_host}${_url}`;
+  if (!fullURLString.split('//')[1]) {
+    fullURLString = `http://${fullURLString}`;
+  }
+  let fullURL = new URL(fullURLString);
+  let {
+    pathname,
+    hostname,
+  } = fullURL;
+  if (!savedData.hosts[hostname]) {
+    savedData.hosts[hostname] = {
       hitCount: 0,
       uniqueIPs: [],
       urls: {},
     };
   }
-  let hostObject = savedData.hosts[host];
+  let hostObject = savedData.hosts[hostname];
   hostObject.hitCount += 1;
   hostObject.uniqueIPs = Array.from(new Set(hostObject.uniqueIPs).add(IP));
 
-  if (!hostObject.urls[url]) {
-    hostObject.urls[url] = {
+  if (!hostObject.urls[pathname]) {
+    hostObject.urls[pathname] = {
       hitCount: 0,
       uniqueIPs: [],
       dates: {},
     };
   }
-  let urlObject = hostObject.urls[url];
+  let urlObject = hostObject.urls[pathname];
   urlObject.hitCount += 1;
   urlObject.uniqueIPs = Array.from(new Set(urlObject.uniqueIPs).add(IP));
 
@@ -115,6 +117,13 @@ function saveDataToJSON(updatedData) {
     JSON.stringify(updatedData),
     'utf8'
   );
+}
+
+function handleServerRequest(request, response) {
+  addIP(request.connection.remoteAddress, request.headers.host, request.url);
+  saveDataToJSON(savedData);
+  response.write(JSON.stringify(savedData, null, 2));
+  response.end();
 }
 
 (async function() {

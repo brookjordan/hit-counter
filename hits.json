@@ -1,1 +1,1 @@
-{"uniqueIPs":["::1"],"hitCount":1,"hosts":{"localhost:3000":{"hitCount":1,"uniqueIPs":["::1"],"urls":{"/":{"hitCount":1,"uniqueIPs":["::1"],"dates":{"020190429":{"hitCount":1,"uniqueIPs":["::1"]}}}}}}}
+{"uniqueIPs":["::1"],"hitCount":6,"hosts":{"localhost":{"hitCount":6,"uniqueIPs":["::1"],"urls":{"/":{"hitCount":3,"uniqueIPs":["::1"],"dates":{"020190429":{"hitCount":3,"uniqueIPs":["::1"]}}},"/favicon.ico":{"hitCount":3,"uniqueIPs":["::1"],"dates":{"020190429":{"hitCount":3,"uniqueIPs":["::1"]}}}}}}}
